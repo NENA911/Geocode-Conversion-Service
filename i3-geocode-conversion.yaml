@@ -1,0 +1,105 @@
+openapi: 3.0.1
+info:
+  title: Geocode Conversion Service
+  version: "1.0"
+servers:
+  - url: http://localhost/Gcs/v1
+paths:
+  /Geocode:
+    post:
+      tags:
+        - GeocodeRequest
+      summary: Converts civic address to geodetic representation of the location in PIDF-LO format
+      operationId: GeocodeRequest
+      requestBody:
+        description: PIDF-LO data
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Data successfully converted
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/GeodeticData'
+        '307':
+          description: Temporary Redirect
+          headers:
+            Location:
+              description: Referral URI of another GCS
+              schema:
+                type: string
+                format: uri
+        '454':
+          description: Unspecified Error
+        '468':
+          description: No Address Found
+        '469':
+          description: Unknown MCS/GCS
+  /ReverseGeocode:
+    post:
+      tags:
+        - ReverseGeocodeRequest
+      summary: Converts geodetic representation of the location to civic address in PIDF-LO format
+      operationId: ReverseGeocodeRequest
+      requestBody:
+        description: PIDF-LO data
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Data successfully converted
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CivicAddress'
+        '307':
+          description: Temporary Redirect
+          headers:
+            Location:
+              description: Referral URI of another GCS
+              schema:
+                type: string
+                format: uri
+        '468':
+          description: No Address Found
+        '469':
+          description: Unknown MCS/GCS
+  /Versions:
+    servers:
+      - url: https://api.example.com/Gcs
+        description: Override base path for Versions query
+    get:
+      tags:
+        - RetrieveVersions
+      summary: Retrieves all supported versions, vendor parameter is optional.
+      operationId: RetrieveVersions
+      responses:
+        '200':
+          description: Versions found
+          content:
+            application/json:
+              schema:
+                $ref: 'i3-common.yaml#/components/schemas/VersionsArray'
+components:
+  schemas:
+    GeodeticData:
+      type: object
+      required:
+        - pidfLoGeo
+      properties:
+        pidfLoGeo:
+          type: string
+    CivicAddress:
+      type: object
+      required:
+        - pidfLoAddress
+      properties:
+        pidfLoAddress:
+          type: string
