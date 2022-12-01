@@ -1,4 +1,4 @@
-# Geocode-Conversion-Service
+# Geocode-Service
 The Geocode Service provides geocoding and reverse-geocoding. This web service provides two functions:
 
 *	Geocode: which takes a PIDF LO, as described in RFC 4119, and updated by RFC 5139 and RFC 5491, which contains a civic address, and returns a PIDF LO containing a geodetic representation for the same location.
